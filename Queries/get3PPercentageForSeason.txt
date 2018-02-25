@@ -1,0 +1,11 @@
+SELECT FirstName, LastName, SUM(tot3PP)/COUNT(tot3PP) as 'Season Three-Pointer Percentage'
+FROM
+(
+	SELECT FirstName, LastName, Date, Three_Point_Percentage as tot3PP
+	FROM player_stats_in_game
+	JOIN player USING(PlayerID)
+	JOIN game USING(GameID)
+
+	WHERE	FirstName = ‘?’ AND LastName = ‘?’ 
+	AND 	Date BETWEEN ‘(?)-08-01'AND ‘(?+1)-06-31'
+) as all3PPercentages

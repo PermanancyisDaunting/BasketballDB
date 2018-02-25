@@ -1,0 +1,7 @@
+SELECT Points 
+FROM player_stats_in_game 
+JOIN game USING(GameID) 
+JOIN player USING(playerID) 
+WHERE 	game.Date = “?” 
+AND 	player.LastName = “?”
+AND	player.FirstName = “?”;

@@ -1,0 +1,19 @@
+SELECT FirstName, LastName, SUM(Steals)
+FROM
+(
+	SELECT PlayerID, FirstName, LastName, GameID, Date, Steals
+	FROM player_stats_in_game
+	JOIN
+	(
+    		SELECT GameID, Date, Steals
+		FROM game
+		WHERE	Date BETWEEN ‘(?)-08-01' AND ‘(?+1)-06-31'
+	) as gameRange USING(GameID)
+	JOIN 
+    	(
+        	SELECT PlayerID, FirstName, LastName
+    		FROM player
+    		WHERE	LastName = ‘?’
+		AND	FirstName = ‘?’
+    	) as playerSelect USING(PlayerID)
+) as totalSteals

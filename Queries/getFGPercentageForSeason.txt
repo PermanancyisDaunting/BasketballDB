@@ -1,0 +1,11 @@
+SELECT FirstName, LastName, SUM(totFGP)/COUNT(totFGP) as 'Season Field Goal Percentage'
+FROM
+(
+	SELECT FirstName, LastName, Date, Field_Goal_Percentage as totFGP
+	FROM player_stats_in_game
+	JOIN player USING(PlayerID)
+	JOIN game USING(GameID)
+
+	WHERE	FirstName = ‘?’ AND LastName = ‘?’ 
+	AND 	Date BETWEEN ‘(?)-08-01'AND ‘(?+1)-06-31'
+) as allFGPercentages

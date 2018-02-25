@@ -1,0 +1,6 @@
+SELECT FirstName, LastName, Date, Field_Goal_Percentage
+FROM player_stats_in_game
+JOIN player USING(PlayerID)
+JOIN game USING(GameID)
+
+WHERE FirstName = ‘?’ AND LastName = ‘?’ AND Date = ‘?’
