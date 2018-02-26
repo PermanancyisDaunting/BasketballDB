@@ -1,0 +1,7 @@
+SELECT FirstName, LastName, SUM(Blocks)
+FROM player_stats_in_game
+JOIN game ON game.GameID = player_stats_in_game.GameID
+JOIN player ON player.PlayerID = player_stats_in_game.PlayerID
+WHERE Date BETWEEN ?’-08-01' AND ?’-06-31'
+AND LastName = ?
+AND	FirstName = ?
