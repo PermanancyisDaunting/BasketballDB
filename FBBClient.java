@@ -1,22 +1,16 @@
 import java.io.*;
-import java.util.Scanner;
+import java.sql.SQLException;
+
+
 public class FBBClient {
 	
-	  public static void main(String [] args) throws FileNotFoundException
+	  public static void main(String [] args) throws FileNotFoundException, SQLException
 	  {
 		  //declare variables
-		String user = "";
-		String pass = "";
 		int select = 1;
-	    DBConnect dbReader = new DBConnect();
-	    CredentialIO credIO = new CredentialIO();
-	    user = credIO.getUser();
-	    pass = credIO.getPass();
-
-	    dbReader.Connect(user, pass);
-	    
-	    
+          	
 	    FBBMenus traverse = new FBBMenus(select);
+	    
 	    traverse.TopMenu(select);
 	    
 	  }//end main
