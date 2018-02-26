@@ -8,7 +8,7 @@ public class DBConnect {
 		
 	}
 
-	public void Connect(String user, String pass)
+	public Connection Connect(String user, String pass)
 	{
 	//connect to DB
 	  Connection conn = null;
@@ -26,6 +26,7 @@ public class DBConnect {
          e.printStackTrace();
 
      }
+     return conn;
 	}//end Connect
 	
 	public void Terminate(Connection conn)

@@ -16,18 +16,25 @@ public class DBQueries {
         return query;
     }
     ///////////////////////////////////////////////////////////////////////////
-    public String get3PPercentageForSeason(){ //implemented
+    public String get3PPercentageForSeason(int date1){ //implemented
                 
-        query = "SELECT FirstName, LastName, SUM(tot3PP)/COUNT(tot3PP) as 'Season Three-Pointer Percentage' "
-        		+ "FROM ( SELECT FirstName, LastName, Date, Three_Point_Percentage as tot3PP FROM player_stats_in_game "
-        		+ "JOIN player USING(PlayerID) JOIN game USING(GameID) WHERE FirstName = ? AND LastName = ? "
-        		+ "AND Date BETWEEN ? '-08-01' AND ? '-06-31' ) as all3PPercentages";
+        query = "SELECT FirstName, LastName, SUM(tot3PP)/COUNT(tot3PP) as 'Season Three-Pointer Percentage'\n" +
+"               FROM\n" +
+"                 (\n" +
+"                 SELECT FirstName, LastName, Date, Three_Point_Percentage as tot3PP\n" +
+"                    FROM player_stats_in_game\n" +
+"                   JOIN player USING(PlayerID)\n" +
+"               JOIN game USING(GameID)\n" +
+"               \n" +
+"              WHERE	FirstName = ? AND LastName = ? \n" +
+"               AND 	Date BETWEEN '"+date1+"-08-01'AND '"+(date1+1)+"-06-31'\n" +
+"               ) as all3PPercentages";
         
         return query;
         
     }
     
-    public String getAssistsForGameXByPlayerY(){
+    public String getAssistsForGameXByPlayerY(){ //implemented
                 
         query = "SELECT Assists \n" +
                 " FROM player_stats_in_game \n" +
@@ -42,33 +49,21 @@ public class DBQueries {
     }
     
     /////////////////////////////////////////////////////////////////////////
-    public String getAssistsForSeasonXByPlayerY() {
+    public String getAssistsForSeasonXByPlayerY(int date1) { //implemented
                 
-        query = "SELECT FirstName, LastName, SUM(Assists) \n" +
-                " FROM" +
-                " (\n" +
-                "	SELECT PlayerID, FirstName, LastName, GameID, Date, Assists \n" +
-                "	FROM player_stats_in_game \n" +
-                "	JOIN \n" +
-                "	(\n" +
-                "    		SELECT GameID, Date, Assists \n" +
-                "		FROM game \n" +
-                "		WHERE	Date BETWEEN ? '-08-01' AND ? '-06-31' \n" +
-                "	) as gameRange USING(GameID) \n" +
-                "	JOIN \n" +
-                "    	(\n" +
-                "        	SELECT PlayerID, FirstName, LastName \n" +
-                "    		FROM player \n" +
-                "    		WHERE	LastName = ? \n" +
-                "		AND	FirstName = ? \n" +
-                "    	) as playerSelect USING(PlayerID) \n" +
-                " ) as totalAssists";
+        query = "SELECT FirstName, LastName, SUM(Assists)\n" + 
+        		" FROM player_stats_in_game\n" + 
+        		" JOIN game ON game.GameID = player_stats_in_game.GameID\n" + 
+        		" JOIN player ON player.PlayerID = player_stats_in_game.PlayerID\n" + 
+        		" WHERE Date BETWEEN '"+date1+"-08-01' AND '"+(date1 +1)+"-06-31' \n" + 
+        		" AND LastName = ? \n" + 
+        		" AND	 FirstName = ? ";
         
         return query;
         
     }
     
-    public String getBlocksForGameXByPlayerY(){
+    public String getBlocksForGameXByPlayerY(){ //implemented
                 
         query = "SELECT Blocks \n" +
                 " FROM player_stats_in_game \n" +
@@ -84,27 +79,15 @@ public class DBQueries {
     }
     
     //////////////////////////////////////////////////////////////////////////
-    public String getBlocksForSeasonXByPlayerY() {
+    public String getBlocksForSeasonXByPlayerY(int date1) { //implemented
                 
-        query = "SELECT FirstName, LastName, SUM(Blocks)\n" +
-                "FROM\n" +
-                "(\n" +
-                "	SELECT PlayerID, FirstName, LastName, GameID, Date, Blocks\n" +
-                "	FROM player_stats_in_game\n" +
-                "	JOIN\n" +
-                "	(\n" +
-                "    		SELECT GameID, Date, Blocks\n" +
-                "		FROM game\n" +
-                "		WHERE	Date BETWEEN (?)-08-01 AND (?+1)-06-31\n" +
-                "	) as gameRange USING(GameID)\n" +
-                "	JOIN \n" +
-                "    	(\n" +
-                "        	SELECT PlayerID, FirstName, LastName\n" +
-                "    		FROM player\n" +
-                "    		WHERE	LastName = ?\n" +
-                "		AND	FirstName = ?\n" +
-                "    	) as playerSelect USING(PlayerID)\n" +
-                ") as totalBlocks";
+        query = "SELECT FirstName, LastName, SUM(Blocks)\n" + 
+        		" FROM player_stats_in_game\n" + 
+        		" JOIN game ON game.GameID = player_stats_in_game.GameID\n" + 
+        		" JOIN player ON player.PlayerID = player_stats_in_game.PlayerID\n" + 
+        		" WHERE Date BETWEEN '"+date1+"-08-01' AND '"+(date1+1)+"-06-31' \n" + 
+        		" AND LastName = ? \n" + 
+        		" AND	 FirstName = ? ";
         
         return query;
         
@@ -112,7 +95,7 @@ public class DBQueries {
     
     
     
-    public String getDefensiveReboundsForGameXByPlayerY() {
+    public String getDefensiveReboundsForGameXByPlayerY() { //implemented
                 
         query = "SELECT Defensive_Rebounds \n" +
                 " FROM player_stats_in_game \n" +
@@ -127,27 +110,15 @@ public class DBQueries {
     }
     
     //////////////////////////////////////////////////////////////////////////
-    public String getDefensiveReboundsForSeasonXByPlayerY() {
+    public String getDefensiveReboundsForSeasonXByPlayerY(int date1) { //implemented
                 
-        query = "SELECT FirstName, LastName, SUM(Defensive_Rebounds)\n" +
-                "FROM\n" +
-                "(\n" +
-                "	SELECT PlayerID, FirstName, LastName, GameID, Date, Defensive_Rebounds\n" +
-                "	FROM player_stats_in_game\n" +
-                "	JOIN\n" +
-                "	(\n" +
-                "    		SELECT GameID, Date, Defensive_Rebounds\n" +
-                "		FROM game\n" +
-                "		WHERE	Date BETWEEN (?)-08-01 AND (?+1)-06-31\n" +
-                "	) as gameRange USING(GameID)\n" +
-                "	JOIN \n" +
-                "    	(\n" +
-                "        	SELECT PlayerID, FirstName, LastName\n" +
-                "    		FROM player\n" +
-                "    		WHERE	LastName = ?\n" +
-                "		AND	FirstName = ?\n" +
-                "    	) as playerSelect USING(PlayerID)\n" +
-                ") as totalDR";
+        query = "SELECT FirstName, LastName, SUM(Defensive_Rebounds)\n" + 
+        		" FROM player_stats_in_game\n" + 
+        		" JOIN game ON game.GameID = player_stats_in_game.GameID\n" + 
+        		" JOIN player ON player.PlayerID = player_stats_in_game.PlayerID\n" + 
+        		" WHERE Date BETWEEN '"+date1+"-08-01' AND '"+(date1+1)+"-06-31' \n" + 
+        		" AND LastName = ? \n" + 
+        		" AND	 FirstName = ? ";
         
         return query;
         
@@ -155,7 +126,7 @@ public class DBQueries {
     }
     
     
-    public String getFGPercentageForGame() {
+    public String getFGPercentageForGame() { //implemented
                 
         query = "SELECT FirstName, LastName, Date, Field_Goal_Percentage\n" +
                 " FROM player_stats_in_game\n" +
@@ -169,9 +140,9 @@ public class DBQueries {
     }
     
     /////////////////////////////////////////////////////////////////////////
-    public String getFGPercentageForSeason() {
+    public String getFGPercentageForSeason(int date1) { //implemented
                 
-        query = "SELECT FirstName, LastName, SUM(totFGP)/COUNT(totFGP) as Season Field Goal Percentage\n" +
+        query = "SELECT FirstName, LastName, SUM(totFGP)/COUNT(totFGP) as 'Season Field Goal Percentage'\n" +
                 "FROM\n" +
                 "(\n" +
                 "	SELECT FirstName, LastName, Date, Field_Goal_Percentage as totFGP\n" +
@@ -180,14 +151,14 @@ public class DBQueries {
                 "	JOIN game USING(GameID)\n" +
                 "\n" +
                 "	WHERE	FirstName = ? AND LastName = ? \n" +
-                "	AND 	Date BETWEEN (?)-08-01AND (?+1)-06-31\n" +
+                "	AND 	Date BETWEEN '"+date+"-08-01' AND '"+(date1+1)+"-06-31' \n" +
                 ") as allFGPercentages";
         
         return query;
         
         
     }
-    public String getFTPercentageForGame()
+    public String getFTPercentageForGame() //implemented
 	{
 		query="SELECT FirstName, LastName, Date, Free_Throw_Percentage\n" + 
 				" FROM player_stats_in_game\n" + 
@@ -197,9 +168,9 @@ public class DBQueries {
 				" WHERE FirstName = ? AND LastName = ? AND Date = ?";
 		return query;
 	}
-	public String getFTPercentageForSeason()
+	public String getFTPercentageForSeason(int date1) //implemented
 	{
-		query= "SELECT FirstName, LastName, SUM(totFTP)/COUNT(totFTP) as Season Free Throw Percentage\n" + 
+		query= "SELECT FirstName, LastName, SUM(totFTP)/COUNT(totFTP) as 'Season Free Throw Percentage' \n" + 
 				"FROM\n" + 
 				"(\n" + 
 				"	SELECT FirstName, LastName, Date, Free_Throw_Percentage as totFTP\n" + 
@@ -208,11 +179,11 @@ public class DBQueries {
 				"	JOIN game USING(GameID)\n" + 
 				"\n" + 
 				"	WHERE	FirstName = ? AND LastName = ? \n" + 
-				"	AND 	Date BETWEEN (?)-08-01AND (?+1)-06-31\n" + 
+				"	AND 	Date BETWEEN '"+date+"-08-01' AND '"+(date1+1)+"-06-31' \n" + 
 				") as allFTPercentages";
 		return query;
 	}
-	public String getFoulsForGameXByPlayerY()
+	public String getFoulsForGameXByPlayerY() //implemented
 	{
 		query="SELECT Fouls \n" + 
 				" FROM player_stats_in_game \n" + 
@@ -223,30 +194,18 @@ public class DBQueries {
 				" AND player.FirstName = ? ";
 		return query;
 	}
-	public String getFoulsForSeasonXByPlayerY()
+	public String getFoulsForSeasonXByPlayerY(int date1) //implemented
 	{
-		query="SELECT FirstName, LastName, SUM(Fouls)\n" + 
-				"FROM\n" + 
-				"(\n" + 
-				"	SELECT PlayerID, FirstName, LastName, GameID, Date, Fouls\n" + 
-				"	FROM player_stats_in_game\n" + 
-				"	JOIN\n" + 
-				"	(\n" + 
-				"    		SELECT GameID, Date, Fouls\n" + 
-				"		FROM game\n" + 
-				"		WHERE	Date BETWEEN (?)-08-01 AND (?+1)-06-31\n" + 
-				"	) as gameRange USING(GameID)\n" + 
-				"	JOIN \n" + 
-				"    	(\n" + 
-				"        	SELECT PlayerID, FirstName, LastName\n" + 
-				"    		FROM player\n" + 
-				"    		WHERE	LastName = ?\n" + 
-				"		AND	FirstName = ?\n" + 
-				"    	) as playerSelect USING(PlayerID)\n" + 
-				") as totalFouls";
+		query="SELECT FirstName, LastName, SUM(Fouls)\n" +
+                    "FROM player_stats_in_game\n" +
+                    "JOIN game ON game.GameID = player_stats_in_game.GameID\n" +
+                    "JOIN player ON player.PlayerID = player_stats_in_game.PlayerID\n" +
+                    "WHERE Date BETWEEN '"+date1+"-08-01' AND '"+(date1+1)+"-06-31'\n" +
+                    "AND LastName = ?\n" +
+                    "AND	FirstName = ?";
 		return query;
 	}
-	public String getOffensiveReboundsForGameXByPlayerY()
+	public String getOffensiveReboundsForGameXByPlayerY() //implemented
 	{
 		query="SELECT Offensive_Rebounds \n" + 
 				" FROM player_stats_in_game \n" + 
@@ -257,30 +216,18 @@ public class DBQueries {
 				" AND	 player.FirstName = ?;";
 		return query;
 	}
-	public String getOffensiveReboundsForSeasonXByPlayerY()
+	public String getOffensiveReboundsForSeasonXByPlayerY(int date1) //implemented
 	{
-		query="SELECT FirstName, LastName, SUM(Offensive_Rebounds)\n" + 
-				"FROM\n" + 
-				"(\n" + 
-				"	SELECT PlayerID, FirstName, LastName, GameID, Date, Offensive_Rebounds\n" + 
-				"	FROM player_stats_in_game\n" + 
-				"	JOIN\n" + 
-				"	(\n" + 
-				"    		SELECT GameID, Date, Offensive_Rebounds\n" + 
-				"		FROM game\n" + 
-				"		WHERE	Date BETWEEN (?)-08-01 AND (?+1)-06-31\n" + 
-				"	) as gameRange USING(GameID)\n" + 
-				"	JOIN \n" + 
-				"    	(\n" + 
-				"        	SELECT PlayerID, FirstName, LastName\n" + 
-				"    		FROM player\n" + 
-				"    		WHERE	LastName = ?\n" + 
-				"		AND	FirstName = ?\n" + 
-				"    	) as playerSelect USING(PlayerID)\n" + 
-				") as totalOR";
+		query="SELECT FirstName, LastName, SUM(Offensive_Rebounds)\n" +
+                    "FROM player_stats_in_game\n" +
+                    "JOIN game ON game.GameID = player_stats_in_game.GameID\n" +
+                    "JOIN player ON player.PlayerID = player_stats_in_game.PlayerID\n" +
+                    "WHERE Date BETWEEN '"+date1+"-08-01' AND '"+(date1+1)+"-06-31'\n" +
+                    "AND LastName = ?\n" +
+                    "AND	FirstName = ?";
 		return query;
 	}
-	public String getPointsForGameXByPlayerY()
+	public String getPointsForGameXByPlayerY() //implemented
 	{
 		query="SELECT Points \n" + 
 				" FROM player_stats_in_game \n" + 
@@ -292,30 +239,18 @@ public class DBQueries {
 		return query;
 	}
 	
-	public String getPointsForSeasonXByPlayerY()
+	public String getPointsForSeasonXByPlayerY(int date1) //implemented
 	{
-		query="SELECT FirstName, LastName, SUM(Points)\n" + 
-				"FROM\n" + 
-				"(\n" + 
-				"	SELECT PlayerID, FirstName, LastName, GameID, Date, Points\n" + 
-				"	FROM player_stats_in_game\n" + 
-				"	JOIN\n" + 
-				"	(\n" + 
-				"    		SELECT GameID, Date, Points\n" + 
-				"		FROM game\n" + 
-				"		WHERE	Date BETWEEN (?)-08-01 AND (?+1)-06-31\n" + 
-				"	) as gameRange USING(GameID)\n" + 
-				"	JOIN \n" + 
-				"    	(\n" + 
-				"        	SELECT PlayerID, FirstName, LastName\n" + 
-				"    		FROM player\n" + 
-				"    		WHERE	LastName = ?\n" + 
-				"		AND	FirstName = ?\n" + 
-				"    	) as playerSelect USING(PlayerID)\n" + 
-				") as totalPoints";
+		query="SELECT FirstName, LastName, SUM(Points)\n" +
+                    "FROM player_stats_in_game\n" +
+                    "JOIN game ON game.GameID = player_stats_in_game.GameID\n" +
+                    "JOIN player ON player.PlayerID = player_stats_in_game.PlayerID\n" +
+                    "WHERE Date BETWEEN '"+date1+"-08-01' AND '"+(date1+1)+"-06-31'\n" +
+                    "AND LastName = ?\n" +
+                    "AND	FirstName = ?";
 		return query;
 	}
-	public String getReboundsForGameXByPlayerY()
+	public String getReboundsForGameXByPlayerY() //implemented
 	{
 		query ="SELECT Rebounds \n" + 
 				" FROM player_stats_in_game \n" + 
@@ -326,30 +261,18 @@ public class DBQueries {
 				" AND	 player.FirstName = ?;";
 		return query;
 	}
-	public String getReboundsForSeasonXByPlayerY()
+	public String getReboundsForSeasonXByPlayerY(int date1) //implemented
 	{
-		query ="SELECT FirstName, LastName, SUM(Rebounds)\n" + 
-				"FROM\n" + 
-				"(\n" + 
-				"	SELECT PlayerID, FirstName, LastName, GameID, Date, Rebounds\n" + 
-				"	FROM player_stats_in_game\n" + 
-				"	JOIN\n" + 
-				"	(\n" + 
-				"    		SELECT GameID, Date, Rebounds\n" + 
-				"		FROM game\n" + 
-				"		WHERE	Date BETWEEN (?)-08-01 AND (?+1)-06-31\n" + 
-				"	) as gameRange USING(GameID)\n" + 
-				"	JOIN \n" + 
-				"    	(\n" + 
-				"        	SELECT PlayerID, FirstName, LastName\n" + 
-				"    		FROM player\n" + 
-				"    		WHERE	LastName = ?\n" + 
-				"		AND	FirstName = ?\n" + 
-				"    	) as playerSelect USING(PlayerID)\n" + 
-				") as totalR";
+		query ="SELECT FirstName, LastName, SUM(Rebounds)\n" +
+                    "FROM player_stats_in_game\n" +
+                    "JOIN game ON game.GameID = player_stats_in_game.GameID\n" +
+                    "JOIN player ON player.PlayerID = player_stats_in_game.PlayerID\n" +
+                    "WHERE Date BETWEEN '"+date1+"-08-01' AND '"+(date1+1)+"-06-31'\n" +
+                    "AND LastName = ?\n" +
+                    "AND	FirstName = ?";
 		return query;
 	}
-	public String getStealsForGameXByPlayerY()
+	public String getStealsForGameXByPlayerY() //implemented
 	{
 	query ="SELECT Steals \n" + 
 			" FROM player_stats_in_game \n" + 
@@ -361,31 +284,19 @@ public class DBQueries {
 	return query;
 	}
 	
-	public String getStealsForSeasonXByPlayerY()
+	public String getStealsForSeasonXByPlayerY(int date1) //implemented
 	{
-		query ="SELECT FirstName, LastName, SUM(Steals)\n" + 
-				"FROM\n" + 
-				"(\n" + 
-				"	SELECT PlayerID, FirstName, LastName, GameID, Date, Steals\n" + 
-				"	FROM player_stats_in_game\n" + 
-				"	JOIN\n" + 
-				"	(\n" + 
-				"    		SELECT GameID, Date, Steals\n" + 
-				"		FROM game\n" + 
-				"		WHERE	Date BETWEEN (?)-08-01 AND (?+1)-06-31\n" + 
-				"	) as gameRange USING(GameID)\n" + 
-				"	JOIN \n" + 
-				"    	(\n" + 
-				"        	SELECT PlayerID, FirstName, LastName\n" + 
-				"    		FROM player\n" + 
-				"    		WHERE	LastName = ?\n" + 
-				"		AND	FirstName = ?\n" + 
-				"    	) as playerSelect USING(PlayerID)\n" + 
-				") as totalSteals";
+		query ="SELECT FirstName, LastName, SUM(Steals)\n" +
+                    "FROM player_stats_in_game\n" +
+                    "JOIN game ON game.GameID = player_stats_in_game.GameID\n" +
+                    "JOIN player ON player.PlayerID = player_stats_in_game.PlayerID\n" +
+                    "WHERE Date BETWEEN '"+date1+"-08-01' AND '"+(date1+1)+"-06-31'\n" +
+                    "AND LastName = ?\n" +
+                    "AND	FirstName = ?";
 		return 
 				query;
 	}
-	public String getTurnoversForGameXByPlayerY()
+	public String getTurnoversForGameXByPlayerY() //implemented
 	{
 		query = " SELECT Turnovers \n" + 
 				" FROM player_stats_in_game \n" + 
@@ -397,27 +308,15 @@ public class DBQueries {
 				return query;
 	}
 	
-	public String getTurnoversForSeasonXByPlayerY()
+	public String getTurnoversForSeasonXByPlayerY(int date1) //implemented
 	{
-		query = "SELECT FirstName, LastName, SUM(Turnovers)"+
-	"FROM"+
-	"("+
-		"SELECT PlayerID, FirstName, LastName, GameID, Date, Turnovers"+
-		"FROM player_stats_in_game"+
-		"JOIN"+
-		"("+
-	    		"SELECT GameID, Date, Turnovers"+
-			"FROM game"+
-			"WHERE	Date BETWEEN (?)-08-01 AND (?+1)-06-31"+
-		") as gameRange USING(GameID)"+
-		"JOIN "+
-	    	"("+
-	     "   	SELECT PlayerID, FirstName, LastName"+
-	    	"	FROM player"+
-	    	"	WHERE	LastName = ?"+
-		"	AND	FirstName = ?"+
-	    	") as playerSelect USING(PlayerID)"+
-	") as totalTurnovers";
+		query = "SELECT FirstName, LastName, SUM(Turnovers)\n" +
+                    "FROM player_stats_in_game\n" +
+                    "JOIN game ON game.GameID = player_stats_in_game.GameID\n" +
+                    "JOIN player ON player.PlayerID = player_stats_in_game.PlayerID\n" +
+                    "WHERE Date BETWEEN '"+date1+"-08-01' AND '"+(date1+1)+"-06-31'\n" +
+                    "AND LastName = ?\n" +
+                    "AND	FirstName = ?";
 		
 		return query;
 }
